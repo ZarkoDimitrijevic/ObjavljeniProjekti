@@ -36,4 +36,26 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function posts()
+    {
+        return $this->hasMany('App\Post', 'user_id', 'id');//prvo ide sa kojom se spaja, pa strani kljuc, pa kljuc
+    }
+
+    public function following()
+    {
+        //niz korisnika koje korisnik prati
+        return $this->belongsToMany('App\User', 'follow', 'user_id', 'friend_id');//drugi argument Pivot tabela, treci argument je user id, a cetvrti friend id iz same tabele
+    }
+
+    public function followers()
+    {
+        //niz korisnika koji prate datog korisnika
+        return $this->belongsToMany('App\User', 'follow', 'friend_id', 'user_id');
+    }
+
+    public function event()
+    {
+        return $this->hasMany('App\User', 'user_id', 'id');
+    }
 }
